@@ -1,0 +1,6 @@
+##
+# add ->  sudo python /opt/e-gpio/lcd/startup.lcd.py &  to  /etc/rc.local
+
+
+
+sudo ln -s /home/pi/git/p6p/opt/e-gpio /opt/e-gpio

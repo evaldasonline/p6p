@@ -1,0 +1,17 @@
+# prepare git
+git config --global user.name "evaldasonline"
+git config --global user.email "evaldasonline@yahoo.com"
+git config --global color.ui true
+
+# generate ssh https://help.github.com/en/github/authenticating-to-github/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent
+ssh-keygen -t rsa -b 4096 -C "evaldasonline@yahoo.com"
+# Start the ssh-agent in the background
+eval "$(ssh-agent -s)"
+ssh-add ~/.ssh/id_rsa
+
+sudo apt-get install -y xclip
+xclip -sel clip < ~/.ssh/id_rsa.pub
+
+
+git remote add origin git@github.com:username/new_repo
+git push -u origin master
