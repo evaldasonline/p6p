@@ -1,0 +1,169 @@
+#include <Servo.h> 
+const int maxkoja=4;
+int dKoja[2][maxkoja] = {{180,0,180,0}, {90,90,90,90}};
+int sPin[] = {0,1,2,3}; 
+int KOJA[maxkoja]; 
+int oldKOJA[maxkoja];
+Servo Se[maxkoja]; 
+
+
+void setup() { 
+  Serial.begin(9600);
+  Serial.println("Pradeda");
+  for (int s=0; s<maxkoja; s++) {
+     Se[s].attach(sPin[s]); 
+     KOJA[s]=dKoja[0][s];
+     oldKOJA[s]=dKoja[0][s];
+     
+     updateOne(s, -1);
+  }
+}  //end Setup
+/*************************************/
+int sign(int x) {
+  if (x<0) return -1;
+  return 1;
+}
+/*************************************/
+void updateOne(int k, int d) {
+  int o,n;
+  o=oldKOJA[k]; n=KOJA[k];
+  
+  if (d== -1) {   //jei inicializuojame - permesti tiesiai i pozicija
+    Se[k].write(KOJA[k]);  
+  } 
+  else {  if (o!=n) { //letas perejimas nuo senos i nauja pozicija
+    Serial.print(k); Serial.print(": "); Serial.print(o); Serial.print(" -> "); Serial.print(n); 
+    if (o>n) { 
+      for (int x=o; x>n; x=x-1) {
+        Se[k].write(x); delay(d); 
+        Serial.print("<"); 
+      }
+    } else {
+      for (int x=o; x<n; x=x+1) {
+        Se[k].write(x); delay(d); 
+        Serial.print(">"); 
+      }
+    }
+    Serial.println("!"); 
+  }
+  oldKOJA[k]=KOJA[k];
+  }//tikrinimas ar lygus
+}  //end updateOne
+/*****************************************/
+void updateAll(int d) {
+  for (int s=0; s<=maxkoja; s++) {
+    updateOne(s,d);
+  }
+}  //end updateAll
+/*******************************************/
+void move_to_pattern(int p) {
+  int dif[maxkoja];
+  int sgn[maxkoja];
+  int absdif[maxkoja];
+  int maxdif=0;
+  int s;
+  bool bb=false, b[maxkoja];
+  
+  for (s=0; s<maxkoja; s++) {
+    dif[s] = dKoja[p][s] - oldKOJA[s];
+    absdif[s]=abs(dif[s]);
+    sgn[s] = sign(dif[s]);
+    b[s]=false; if (absdif[s] > 0) {b[s]=true;}   //ar reikia koja judinti
+    bb=bb or b[s];
+  }
+  while (bb) {
+    bb=false;
+    for (s=0; s<maxkoja; s++) {
+      if (b[s]) {
+        KOJA[s]=KOJA[s] + sgn[s];
+        updateOne(s,1);
+        absdif[s]--;
+        if (absdif[s]<=0) {b[s]=false;} else {b[s]=true;} 
+      } 
+      bb=bb or b[s];
+    }
+  } 
+} // end  move_to_patternca
+/*******************************************/
+void kom(int k) {
+  Serial.print("Koja: "); Serial.print(k); 
+  int laikas=1;  String rr="";  bool jau=false;
+  while (!jau) {
+    while (Serial.available()) {
+      char cc = Serial.read(); rr += cc; delay(2);  
+    }
+    if (rr.length() >0) {
+      Serial.println(rr);  
+      int n = rr.toInt();    KOJA[k]=n;  updateOne(k,20); jau=true; break;
+    }
+    delay(1000); Serial.print(".");  laikas+=1;   if (laikas>20) {Serial.println("");}
+  }
+} /// end kom()
+/*****************************************************/
+
+void komanda(String st) {
+  int p;
+  char c;
+
+  c=st[0];
+
+  
+  switch (c) {
+    case '0': 
+      kom(0);
+      break;
+    case '1': 
+      kom(1);
+      break;
+    case '2': 
+      kom(2);
+      break;
+    case '3': 
+      kom(3);
+      break;
+
+    case 'x':
+      p=st[1];
+      switch (p) {
+        case '0': 
+          move_to_pattern(0);          
+          break;
+        case '1':
+          move_to_pattern(1);
+          break;
+        default: 
+          break;
+      }
+
+    case '*':
+      c="";
+      Serial.println(); 
+      Serial.print(KOJA[0]); Serial.print(" / "); Serial.print(KOJA[1]); Serial.print(" / ");
+      Serial.print(KOJA[2]); Serial.print(" / "); Serial.print(KOJA[3]); Serial.println();
+      
+    default:
+      break;
+      
+  }
+
+} //end komanda
+/**********************************************************/
+
+void loop(){ 
+  String readString;
+  char c;
+  int p;
+  
+  while (Serial.available()) {
+    c = Serial.read();  //gets one byte from serial buffer
+    readString += c; //makes the String readString
+    delay(2);  //slow looping to allow buffer to fill with next character
+  }
+
+  if (readString.length() >0) {
+    komanda(readString);
+  }
+
+  delay(1000);
+  p="";c="";readString="";
+}
