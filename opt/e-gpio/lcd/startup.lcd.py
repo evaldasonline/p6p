@@ -31,31 +31,32 @@ lcd.backlight(0)
 lcd.lcd_clear()
 sleep(10)
 
+
 lcd.backlight(1)
 sleep(.2)
+x=0
 
-ip="127.0.0.1"
-while ip=="127.0.0.1":
+while (x<15):
+    x+=1
     ip=get_ip()
-    lcd.lcd_display_string(ip, 1,1)
-
-if (ip.find("169.254") > 0) :
-    sleep(15)
-    ip=get_ip()
-    lcd.lcd_clear()
-    lcd.lcd_display_string(ip, 1,1)
-    if (ip.find("169.254") > 0) :
-        sleep(15)
-        lcd.lcd_clear()
-        ip=get_ip()
-        lcd.lcd_display_string(ip, 1,1)
-        if (ip.find("169.254") > 0) :
-            lcd.lcd_display_string("DHCP not found", 2,1)
     
+    iplo=ip.find("127.0.0.1")>-1
+    ipno=ip.find("169.254")>-1
+    
+    if (iplo or ipno):
+        for i in range(2,18):
+            lcd.lcd_display_string(" *",2,i)
+            sleep (.3)
+        for i in range(18,2,-1):
+            lcd.lcd_display_string("* ",2,i)
+            sleep(.3)
+    else:
+        x=99
+    
+lcd.lcd_display_string(ip, 1,1)
+lcd.lcd_display_string(" " * 18,2,1)            
 
 sleep(3)
 lcd.backlight(0)
-lcd.lcd_clear()
-lcd.lcd_display_string(ip, 1,1)
+lcd.lcd_display_string("OK",1,17)            
 
-sleep(.01)
