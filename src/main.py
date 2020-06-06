@@ -1,16 +1,25 @@
+import os
 import avukas
+from avukas.Komanda import Komanda as Kom
 
-k=[]
+avukas.kojos.info()
 
-avukas.kojos.c_koja.info()
+k = []
 
-k.append(avukas.kojos.koja(1))
-k[0].move(1,3,5)
+k.append(avukas.kojos.koja(0,0,1,2))
+k.append(avukas.kojos.koja(1,3,4,5))
+k.append(avukas.kojos.koja(2,6,7,8))
+k.append(avukas.kojos.koja(3,9,10,11))
+k.append(avukas.kojos.koja(4,12,13,14))
+k.append(avukas.kojos.koja(5,15,16,17))
+for x in range(6):
+    k[x].move(x*10,x*11,x*12)
 
-k.append(avukas.kojos.koja(2))
-
-print (k[0].nr)
-print (k[1].nr)
-
-print (k[0].get_pos())
-print (k[1].pos)
+kartoti = 1
+while kartoti:
+    s = input("Komanda? ")
+    if s == "q":
+        kartoti=0
+    if len(s) > 0:
+        Kom(s,k)
+    avukas.kojos.show_all(k)
