@@ -6,14 +6,8 @@ class kojos:
     
     def __init__ (self, pw, chan1, chan2, chan3):
         self.srv = [pw, chan1, chan2, chan3]
-        #self.srv.append(pw)
-        #self.srv.append(chan1)
-        #self.srv.append(chan2)
-        #self.srv.append(chan3)
-        
         self.pos = [90, 90, 90]
-        
-        
+
     def get_pos(self):
         return self.pos
         
@@ -28,12 +22,22 @@ class hexapodas:
     def __init__(self, vardas, pwm1add=0x40, pwm2add=0x41):
         self.name = vardas
         self.pwm = []
-        self.koja = []
+        
         self.pwm.append(Adafruit_PCA9685.PCA9685(address=0x40, busnum=1))
         #self.pwm.append(Adafruit_PCA9685.PCA9685(address=0x41, busnum=1))
         self.pwm[0].set_pwm_freq(60)
 
-
+        self.koja = []
+        self.koja.append(kojos(0, 0, 8, 15))
+        self.koja.append(kojos(0, 1, 16, 15))
+        self.koja.append(kojos(0, 2, 16, 15))
+        self.koja.append(kojos(0, 4, 16, 15))
+        self.koja.append(kojos(0, 5, 16, 15))
+        self.koja.append(kojos(0, 6, 16, 15))
+        print (self.koja)
+        
+        
+        
     def info(self):
         print (self.name + " modulis pakrautas")
 
