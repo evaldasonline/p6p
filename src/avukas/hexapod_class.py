@@ -16,6 +16,8 @@ class kojos:
 
 
 #############################################################    
+#############################################################    
+#############################################################    
 class hexapodas:
     # klase
     
@@ -27,36 +29,34 @@ class hexapodas:
         #self.pwm.append(Adafruit_PCA9685.PCA9685(address=0x41, busnum=1))
         self.pwm[0].set_pwm_freq(60)
 
-        self.koja = []
-        self.koja.append(kojos(0, 0, 8, 15))
-        self.koja.append(kojos(0, 1, 16, 15))
-        self.koja.append(kojos(0, 2, 16, 15))
-        self.koja.append(kojos(0, 4, 16, 15))
-        self.koja.append(kojos(0, 5, 16, 15))
-        self.koja.append(kojos(0, 6, 16, 15))
-        print (self.koja)
+        self.K = []
+        self.K.append(kojos(0, 0, 8, 15))
+        self.K.append(kojos(0, 1, 15, 15))
+        self.K.append(kojos(0, 2, 15, 15))
+        self.K.append(kojos(0, 4, 15, 15))
+        self.K.append(kojos(0, 5, 15, 15))
+        self.K.append(kojos(0, 6, 15, 15))
         
         
         
+###############################################################################        
     def info(self):
         print (self.name + " modulis pakrautas")
-
+###############################################################################
     def init_koja(self, pw, chan1, chan2, chan3):
-        self.koja.append(kojos(pw, chan1, chan2, chan3))
+        self.K.append(kojos(pw, chan1, chan2, chan3))
         
         kojaid = len(self.koja) - 1
         
         print ("koja: " + str(kojaid) + " | plokste: " + str(pw) + " | portai: " + str(chan1) + " " + str(chan2) + " " + str(chan3))
         
-
-    #def move_to_pos( self, a=self.pos[0], b=self.pos[1], c=self.pos[2] ):
+###############################################################################
     def move_to_pos(self, kk, a,b,c):
-        servo_min=150
-        servo_max=600
-       
-        self.pwm[self.koja[kk].srv[0]].set_pwm(self.koja[kk].srv[1], 0, a)
-        self.pwm[self.koja[kk].srv[0]].set_pwm(self.koja[kk].srv[2], 0, b)
-        self.pwm[self.koja[kk].srv[0]].set_pwm(self.koja[kk].srv[3], 0, c)
+        self.pwm[self.K[kk].srv[0]].set_pwm(self.K[kk].srv[1], 0, a)
+        self.pwm[self.K[kk].srv[0]].set_pwm(self.K[kk].srv[2], 0, b)
+        self.pwm[self.K[kk].srv[0]].set_pwm(self.K[kk].srv[3], 0, c)
+        
+        self.K[kk].pos=[a,b,c]
         
 
 
