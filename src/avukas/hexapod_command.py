@@ -5,7 +5,7 @@ def Komanda(eile, avukas):
     p=list(map(str,eile.split()))
     fja=p[0]
     x=len(p)
-    print p  ##### <-
+    
 
     if fja == 'LEG':
         if x < 5:
@@ -18,7 +18,7 @@ def Komanda(eile, avukas):
                 print 'a = ', p[2],
                 print 'b = ', p[3],
                 print 'c = ', p[4]
-                avukas.move_to_pos(int(p[1]), int(p[2]), int(p[3]), int(p[4]))
+                avukas.move_to_pos(int(p[1]), [int(p[2]), int(p[3]), int(p[4]) ] )
                 print avukas.K[int(p[1])].get_pos()
         
 
@@ -36,17 +36,35 @@ def Komanda(eile, avukas):
         print k3, '  ', avukas.K[2].get_pos()
         print 'simetriskas atvaizdavimas'
 
-    elif fja == "375":
+    elif fja == "000":
         for i in range(6):
-            avukas.move_to_pos(i, 375, 375, 375)
+            avukas.move_to_pos(i, avukas.K[i].cent )
 
-    elif fja == "BYE":
-        print ('Pabaiga')
+    elif fja == "LGS":
+        for i in range(6):
+            avukas.move_to_pos(i, [ int(p[1]), int(p[2]), int(p[3]) ] )
 
-    elif fja == "BYE":
-        print ('Pabaiga')
+    elif fja == 'EMO':
+        do_emote( avukas, p[1] )
+
     else:
         print ('bbz')
     
     
     return p
+
+######################################33
+####  bandymas judinti letai
+def do_emote( avukas, e ):
+    e=e.upper()
+    if e == 'AGRO':
+        avukas.move_step_val( [ avukas.K[0].cent, avukas.K[1].cent, avukas.K[2].cent, \
+                                avukas.K[3].cent, avukas.K[4].cent, avukas.K[5].cent ] )
+        
+        avukas.move_step_val( [ [600, 200, 375], [500, 500, 375], avukas.K[2].cent, \
+                                avukas.K[3].cent, [200, 200, 375], [150, 550, 375] ] )
+        
+        
+        
+        
+        

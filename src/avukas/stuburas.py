@@ -19,7 +19,9 @@ avukas.info()
 while 1:
 	
 	kmd=raw_input('Komanda? ')
-	
+	if kmd == '':
+		kmd='xxx'
+		
 	eile = Komanda(kmd,avukas)
 	
 	#avukas.K[int(eile[1])].get_pos()
