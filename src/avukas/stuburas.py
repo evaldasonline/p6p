@@ -4,7 +4,7 @@
 #
 
 #from __future__ import division
-#import time
+import time
 #import Adafruit_PCA9685
 from hexapod_class import *
 from hexapod_command import *

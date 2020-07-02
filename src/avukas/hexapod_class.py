@@ -4,6 +4,8 @@ import Adafruit_PCA9685
 
 class kojos:
     
+#    int velinimas=0
+    
     def __init__ (self, pw, chan1, chan2, chan3):
         self.srv = [pw, chan1, chan2, chan3]
         
@@ -12,10 +14,15 @@ class kojos:
         return self.pos
         
     def pradzia(self, kr, c):
+        ## c = [klubas, kelys,peda]
+        ## kryptis = [klubas, kelys,peda]  - teigiamas ar neigiama
         self.kryptis = kr
         self.cent = c
         self.pos = c
-        print self.cent
+        print self.pos
+
+        
+        
         
         
 
@@ -49,11 +56,11 @@ class hexapodas:
 
         # 3 - kaire galas
         self.K.append(kojos(0, 4, 12, 15))
-        self.K[3].pradzia([1, 1, 0], [350,375,375])
+        self.K[3].pradzia([1, 1, 0], [380,395,375])
 
         # 4 - kaire centras
         self.K.append(kojos(0, 5, 13, 15))
-        self.K[4].pradzia([1, 1, 0], [375,375,375])
+        self.K[4].pradzia([1, 1, 0], [375,380,375])
 
         # 5 - kaire priekis
         self.K.append(kojos(0, 6, 14, 15))
@@ -68,7 +75,8 @@ class hexapodas:
         
 ###############################################################################
     def move_to_pos(self, kk, ps):
-        fake=-1
+        # tokia be rysio funkcija... cia pajudinam absoliutinius dydzius. o reikia pereiti i kojos objekta
+        fake=-1  
         
         if ps[0] <> fake:
             self.pwm[self.K[kk].srv[0]].set_pwm(self.K[kk].srv[1], 0, ps[0])
@@ -81,23 +89,40 @@ class hexapodas:
         if ps[2] <> fake:
             self.pwm[self.K[kk].srv[0]].set_pwm(self.K[kk].srv[3], 0, ps[2])
             self.K[kk].pos[2] = ps[2]
-        
 
+########################################################
+    def apply_K_pos1(self,kuri):
+        self.pwm[self.K[kuri].srv[0]].set_pwm(self.K[kuri].srv[1], 0, self.K[kuri].pos[0])
+        time.sleep(0.005)
+        self.pwm[self.K[kuri].srv[0]].set_pwm(self.K[kuri].srv[2], 0, self.K[kuri].pos[1])
+        time.sleep(0.005)
+        self.pwm[self.K[kuri].srv[0]].set_pwm(self.K[kuri].srv[3], 0, self.K[kuri].pos[2])
+        time.sleep(0.005)
+        
+############################################################################33
+# judina pagal absoliutinius skaicius - pwm
     def move_step_val(self, zingsnis):
-        # judina pagal absoliutinius skaicius - pwm
         print zingsnis
         for i in range(6):
             self.move_to_pos(i, zingsnis[i])
             
-            
-'''
-    def move_step(self. zingsnis):
-        #su perskaiciavimu
+###################################################################################33
+# judina visas kojas vienu metu plastishkai
+    def move_form_current(self, zingsnis):
+        # zingsnis = [ [], [], [], [], [], [] ]
         # i - kojos
         for i in range (6):
             #j - sanarys
             for j in range (3):
                 r = self.K[i].kryptis[j]
-                z[i][j] = 375 + zingsnis[i][j] * r
+                # zabs[i][j] = abs(zingsnis[i],[j])
+                self.K[i].pos[j] = self.K[i].pos[j] + zingsnis[i][j] * r
+            self.apply_K_pos1(i)
 
-'''
+###################################################################################33
+# judina pasirinktus sanarius pagal kintamuosius
+    def move_spec(self, k00=0, k01=0, k02=0,   k10=0, k11=0, k12=0,   k20=0, k21=0, k22=0,  \
+    k30=0, k31=0, k32=0,   k40=0, k41=0, k42=0,   k50=0, k51=0, k52=0):
+            # perkeliame tik tuos, kuriuos pasirinkome
+            self.move_form_current ( [ [k00, k01, k02], [k10, k11, k12], [k20, k21, k22], \
+            [k30, k31, k32], [k40, k41, k42], [k50, k51, k52] ] )
