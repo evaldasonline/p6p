@@ -1,4 +1,6 @@
 date +"%Y-%m-%d %T" >> ./.tmp.savetime
 git commit -F ./.tmp.savetime
 rm ./.tmp.savetime
+git add .
+git add *
 git push
