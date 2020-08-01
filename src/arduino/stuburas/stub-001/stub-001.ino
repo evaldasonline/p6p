@@ -1,31 +1,59 @@
 #include <Wire.h>
 #include <Adafruit_PWMServoDriver.h>
 
-Adafruit_PWMServoDriver pwm1 = Adafruit_PWMServoDriver(0x40);
-Adafruit_PWMServoDriver pwm2 = Adafruit_PWMServoDriver(0x41);
 
 #define SERVOMIN  150 // This is the 'minimum' pulse length count (out of 4096)
 #define SERVOMAX  600 // This is the 'maximum' pulse length count (out of 4096)
 #define USMIN  600 // This is the rounded 'minimum' microsecond length based on the minimum pulse of 150
 #define USMAX  2400 // This is the rounded 'maximum' microsecond length based on the maximum pulse of 600
-#define SERVO_FREQ 50 // Analog servos run at ~50 Hz updates
+#define FREQUENCY 50 // Analog servos run at ~50 Hz updates
 
+class Kojos {
+  
+  Adafruit_PWMServoDriver pwm[2] = { Adafruit_PWMServoDriver(0x40), Adafruit_PWMServoDriver(0x41) };
+
+  public:
+  Kojos() {
+    pwm[1].begin();    pwm[2].begin();
+    pwm[1].setOscillatorFrequency(27000000);
+    pwm[1].setPWMFreq(FREQUENCY);  // Analog servos run at ~50 Hz updates
+    pwm[2].setOscillatorFrequency(27000000);
+    pwm[2].setPWMFreq(FREQUENCY);  // Analog servos run at ~50 Hz updates
+    
+    Serial.println('Objektas Kojos inicializuotas');
+  }
+
+  byte _pin[6][3] = { {10,4,0}, {8,7,6}, {5,9,15}, {6,5,0}, {8,7,9}, {11,10,15} };
+  byte _pwm[6][3] = { {1,1,1}, {1,1,1}, {1,1,1}, {2,2,2}, {2,2,2}, {2,2,2} };
+  /*int _pos[6][3] = { {370,370,370}, {370,370,370}, {370,370,370}, {370,370,370}, {370,370,370}, {370,370,370} };*/
+  int _pos[6][3] = { {90,90,90},{90,90,90},{90,90,90},{90,90,90},{90,90,90},{90,90,90} };
+
+
+  /**** move_s_to **********************/
+  void move_s_to(byte k, byte s, int pos){  /* pajudina sanari i pos */
+    this->_pos[k][s] = pos;
+    pwm[_pwm[k][s]].setPWM(_pin[k][s], 0, this->kampas(pos));
+  }
+
+  int kampas(int angle){ //This function calculates servo's motion angle.
+    int pulse_wide, analog_value;
+    pulse_wide = map(angle, 0, 180, SERVOMIN, SERVOMAX); //This function get angle from 0 to 180 degrees and map from length minimum value to maximum. 
+    analog_value = int(float(pulse_wide) / 1000000 * FREQUENCY * 4096);
+    Serial.println(analog_value);
+    return analog_value; //The value this function returns.
+  }
+
+};
+
+/*********************************************************************
+**********************************************************************
+*********************************************************************/
+
+Kojos K;
 int globalPauze=10;
-uint8_t s = 0;
-uint8_t servonum = 0;
 
 void setup() {
   Serial.begin(9600);
-  Serial.println("8 channel Servo test!");
-
-  pwm1.begin();
-  pwm2.begin();
-
-  pwm1.setOscillatorFrequency(27000000);
-  pwm1.setPWMFreq(SERVO_FREQ);  // Analog servos run at ~50 Hz updates
-  pwm2.setOscillatorFrequency(27000000);
-  pwm2.setPWMFreq(SERVO_FREQ);  // Analog servos run at ~50 Hz updates
-
   delay(10);
 }
 /**************************************************************************/
@@ -53,44 +81,10 @@ void komanda(String st) {
 // eile[] - sudeti komandos parametrai
 
   if (tipas=='1') {  //vieno servo pajudinimas
-      kj = eile[1].toInt();
+      int kj = eile[1].toInt();
       int kmp = eile[2].toInt();
       Serial.print("Juda "); Serial.print(kj); Serial.print(" "); Serial.println(kmp);
   }
-
-  
-  if (tipas=='s') {
-      kj = eile[1].toInt();
-      int kmp = eile[2].toInt();
-      Serial.print("Juda "); Serial.print(kj); Serial.print(" "); Serial.println(kmp);
-      KOJA[kj]=kmp; 
-      updateOne( kj,globalPauze );
-  } // s  
-  
-  if (tipas=='k') {
-      kj = eile[1].toInt();
-      int kmp = eile[2].toInt();
-      Serial.print("Juda "); Serial.print(kj); Serial.print(" "); Serial.println(kmp);
-      KOJA[kj]=kmp; 
-      updateOne( kj,globalPauze );
-  } // k
-
-  if (tipas=='d') {  // globalios pauzes nustatymas
-      globalPauze = eile[1].toInt();
-      Serial.print("globali pauze = "); Serial.println(globalPauze);
-  } //d
-
-
-  if (tipas=='m') {
-    kj=eile[1].toInt();  //kiek kartu sukti cikla
-    for (int x=0; x<kj; x++) {
-      for (int j=2; j<=i; j++) {
-        int kmp = eile[j].toInt();
-        move_to_pattern( kmp );
-      }
-      
-    }
-  } //komanderis: m
 
   
 } //end komanda
