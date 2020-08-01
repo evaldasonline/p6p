@@ -49,6 +49,12 @@ def Komanda(eile, avukas):
             avukas.move_to_pos(i, avukas.K[i].cent )
 
 ## -------------------------------------
+    elif fja == "375":
+    # sucentruoja viskas kojas i p[radine padeti
+        for i in range(6):
+            avukas.move_to_pos(i, [375,375,375] )
+
+## -------------------------------------
     elif fja == "LGS":
         for i in range(6):
             avukas.move_to_pos(i, [ int(p[1]), int(p[2]), int(p[3]) ] )

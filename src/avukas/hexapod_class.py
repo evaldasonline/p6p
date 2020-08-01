@@ -59,7 +59,7 @@ class hexapodas:
         self.K[3].pradzia([1, 1, 0], [380,395,375])
 
         # 4 - kaire centras
-        self.K.append(kojos(0, 5, 13, 15))
+        self.K.append(kojos(0, 5, 13, 11))
         self.K[4].pradzia([1, 1, 0], [375,380,375])
 
         # 5 - kaire priekis
@@ -80,7 +80,7 @@ class hexapodas:
         
         if ps[0] <> fake:
             self.pwm[self.K[kk].srv[0]].set_pwm(self.K[kk].srv[1], 0, ps[0])
-            self.K[kk].pos[1] = ps[0]
+            self.K[kk].pos[0 ] = ps[0]
         
         if ps[1] <> fake:
             self.pwm[self.K[kk].srv[0]].set_pwm(self.K[kk].srv[2], 0, ps[1])
