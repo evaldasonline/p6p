@@ -38,32 +38,33 @@ class hexapodas:
         self.pwm = []
         
         self.pwm.append(Adafruit_PCA9685.PCA9685(address=0x40, busnum=1))
-        #self.pwm.append(Adafruit_PCA9685.PCA9685(address=0x41, busnum=1))
+        self.pwm.append(Adafruit_PCA9685.PCA9685(address=0x41, busnum=1))
         self.pwm[0].set_pwm_freq(60)
+        self.pwm[1].set_pwm_freq(60)
 
         self.K = []
         # 0 - desine priekis
-        self.K.append(kojos(0, 0, 8, 15))
+        self.K.append(kojos(0, 10, 4, 0))
         self.K[0].pradzia([-1, -1, 0], [375,375,375])
 
         # 1 - dsine centras
-        self.K.append(kojos(0, 1, 9, 15))
+        self.K.append(kojos(0, 8, 7, 6))
         self.K[1].pradzia([-1, -1, 0], [390,375,375])
 
         # 2 - dsine galas
-        self.K.append(kojos(0, 2, 10, 15))
+        self.K.append(kojos(0, 5, 9, 15))
         self.K[2].pradzia([-1, -1, 0], [375,375,375])
 
         # 3 - kaire galas
-        self.K.append(kojos(0, 4, 12, 15))
+        self.K.append(kojos(1, 5, 6, 0))
         self.K[3].pradzia([1, 1, 0], [380,395,375])
 
         # 4 - kaire centras
-        self.K.append(kojos(0, 5, 13, 11))
+        self.K.append(kojos(1, 8, 7, 9))
         self.K[4].pradzia([1, 1, 0], [375,380,375])
 
         # 5 - kaire priekis
-        self.K.append(kojos(0, 6, 14, 15))
+        self.K.append(kojos(1, 11, 10, 15))
         self.K[5].pradzia([1, 1, 0], [390,375,375])
         
         
@@ -80,7 +81,7 @@ class hexapodas:
         
         if ps[0] <> fake:
             self.pwm[self.K[kk].srv[0]].set_pwm(self.K[kk].srv[1], 0, ps[0])
-            self.K[kk].pos[0 ] = ps[0]
+            self.K[kk].pos[0] = ps[0]
         
         if ps[1] <> fake:
             self.pwm[self.K[kk].srv[0]].set_pwm(self.K[kk].srv[2], 0, ps[1])

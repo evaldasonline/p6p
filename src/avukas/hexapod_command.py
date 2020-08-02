@@ -9,7 +9,7 @@ def Komanda(eile, avukas):
     x=len(p)
     
 ## -------------------------------------
-    if fja == 'LEG':
+    if fja == 'LEG' or fja == 'L':
     # LEG -> kojos nr -> klubas -> kelys -> peda
     # pakeicia nurodytos kojos sanariu kampa absoliutiniu dydziu 
         if x < 5:
@@ -83,6 +83,14 @@ def do_emote( avukas, e ):
         
         avukas.move_step_val( [ [600, 200, 375], [500, 500, 375], avukas.K[2].cent, \
                                 avukas.K[3].cent, [200, 200, 375], [150, 550, 375] ] )
+    
+    elif e == 'ST1':
+        avukas.move_step_val( [ [375, 200, 150], [375, 200, 150], [375, 200, 150], \
+                                [375, 500, 600], [375, 500, 600], [375, 500, 600] ] )
+                                
+        avukas.move_step_val( [ [375, 300, 150], [375, 300, 150], [375, 300, 150], \
+                                [375, 400, 600], [375, 400, 600], [375, 400, 600] ] )
+        
     #--------------------------------------------------------------------------------------
     elif e == 'WAVE':
         for i in range(6):
