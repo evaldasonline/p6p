@@ -10,13 +10,12 @@ void setup(void) {
   Serial.begin(9600) ;     // start serial monitor baud rate
   Serial.println("Starting.. Setting Up.. Radio on..") ; // debug message
   radio.begin();        // start radio at ce csn pin 9 and 10
-  radio.setPALevel(RF24_PA_MAX) ;   // set power level
+  radio.setPALevel(RF24_PA_LOW) ;   // set power level   RF24_PA_MIN, RF24_PA_LOW, RF24_PA_HIGH and RF24_PA_MAX
   radio.setChannel(0x76) ;            // set chanel at 76
   const uint64_t pipe = 0xE0E0F1F1E0LL ;    // pipe address same as sender i.e. raspberry pi
   radio.openReadingPipe(1, pipe) ;        // start reading pipe 
   radio.enableDynamicPayloads() ;
   radio.powerUp() ;          
-  Wire.begin();                 //start i2c address
 }
 
 void loop(void) {
@@ -31,5 +30,5 @@ void loop(void) {
     String stringMessage(receivedMessage) ;     // change char to string
     delay(1000);    // delay of 1 second 
   }
-  delay(10);
+  delay(1000);
 }
