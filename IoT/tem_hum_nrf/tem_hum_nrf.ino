@@ -74,5 +74,5 @@ void loop() {
   radio.write(&eile, sizeof(eile));
   Serial.println("  ..done");  
   
-  delay(15000);
+  delay(5000);
 }
