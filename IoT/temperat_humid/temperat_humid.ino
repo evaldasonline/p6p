@@ -1,4 +1,4 @@
-int DHpin = 9; // input/output pin
+int DHpin = 8; // input/output pin
 byte dat[5];   
 
 byte read_data()
@@ -17,26 +17,42 @@ byte read_data()
 
 void start_test()
 {
+  Serial.print("T: ");
+  
+ Serial.print("1 ");
   digitalWrite(DHpin, LOW); //Pull down the bus to send the start signal
   delay(30); //The delay is greater than 18 ms so that DHT 11 can detect the start signal
+ Serial.print("2 ");
   digitalWrite(DHpin, HIGH);
-  delayMicroseconds(40); //Wait for DHT11 to respond
+  delayMicroseconds(100); //Wait for DHT11 to respond
+ Serial.print("3 ");
   pinMode(DHpin, INPUT);
-  while(digitalRead(DHpin) == HIGH);
+  while(digitalRead(DHpin) == HIGH)
   delayMicroseconds(80); //The DHT11 responds by pulling the bus low for 80us;
+ Serial.print("4 ");
   
   if(digitalRead(DHpin) == LOW)
     delayMicroseconds(80); //DHT11 pulled up after the bus 80us to start sending data;
+
+ Serial.print("5 ");
   for(int i = 0; i < 5; i++) //Receiving temperature and humidity data, check bits are not considered;
     dat[i] = read_data();
+ Serial.print("6 ");
   pinMode(DHpin, OUTPUT);
   digitalWrite(DHpin, HIGH); //After the completion of a release of data bus, waiting for the host to start the next signal
-}
+
+ Serial.println("<!");
+}  //end test proc
 
 void setup()
 {
+  delay(1000);
   Serial.begin(9600);
+  Serial.print("Setup initializing...");
   pinMode(DHpin, OUTPUT);
+  delay(100);
+  Serial.println("done!");
+  delay(10000);
 }
 
 void loop()
@@ -59,5 +75,5 @@ void loop()
   else
     Serial.println("-- OK");
  
-  delay(10000);
+  delay(100);
 }
