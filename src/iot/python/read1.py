@@ -4,12 +4,12 @@ import time      #import time library
 import spidev
 from lib_nrf24 import NRF24   #import NRF24 library
 
-GPIO.setmode(GPIO.BCM)       # set the gpio mode
+GPIO.setmode(GPIO.BOARD)       # set the gpio mode
 
   # set the pipe address. this address shoeld be entered on the receiver alo
 pipes = [[0xF1, 0xF1, 0xF0, 0xF0, 0xE0], [0xE0, 0xE0, 0xE0, 0xE0, 0xE1]]
 radio = NRF24(GPIO, spidev.SpiDev())   # use the gpio pins
-radio.begin(0, 25)   # start the radio and set the ce,csn pin ce= GPIO08, csn= GPIO25
+radio.begin(13, 15)   # start the radio and set the ce,csn pin ce= GPIO08, csn= GPIO25
 radio.setPayloadSize(32)  #set the payload size as 32 bytes
 radio.setChannel(0x76) # set the channel as 76 hex
 radio.setDataRate(NRF24.BR_1MBPS)    # set radio data rate
