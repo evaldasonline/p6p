@@ -72,7 +72,7 @@ void loop() {
   Serial.print("Sending: ");
   Serial.print(eile);
   radio.write(&eile, sizeof(eile));
-  Serial.println("  ..");  
+  Serial.println("  ..done");  
   
-  delay(5000);
+  delay(15000);
 }
